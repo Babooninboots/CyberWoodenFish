@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>赛博木鱼 · 净化功德</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Noto+Serif+SC:wght@400;600;900&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Noto Serif SC', serif;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+    
+    .font-num {
+      font-family: 'Cinzel', serif;
+    }
+
+    /* Ambient pulse */
+    @keyframes aura-pulse {
+      0%, 100% { opacity: 0.35; transform: scale(1); }
+      50% { opacity: 0.65; transform: scale(1.08); }
+    }
+    .aura-glow {
+      animation: aura-pulse 4s ease-in-out infinite;
+    }
+
+    /* Woodfish squash & bounce */
+    .fish-strike {
+      transform: scale(0.92, 0.90) translateY(8px);
+      filter: drop-shadow(0 0 35px rgba(234, 179, 8, 0.55));
+    }
+
+    /* Ripple ring */
+    @keyframes ripple-wave {
+      0% {
+        transform: scale(0.8);
+        opacity: 0.8;
+      }
+      100% {
+        transform: scale(1.9);
+        opacity: 0;
+      }
+    }
+    .ripple-effect {
+      position: absolute;
+      border-radius: 9999px;
+      pointer-events: none;
+      animation: ripple-wave 0.65s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
+    }
+
+    /* Floating merit animation */
+    @keyframes float-fade {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, 0) scale(0.6) rotate(0deg);
+      }
+      25% {
+        opacity: 1;
+        transform: translate(-50%, -24px) scale(1.15) rotate(var(--rot, 0deg));
+      }
+      70% {
+        opacity: 0.9;
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -100px) scale(0.95) rotate(var(--rot, 0deg));
+      }
+    }
+    .floating-merit {
+      position: absolute;
+      pointer-events: none;
+      white-space: nowrap;
+      animation: float-fade 1.1s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+    }
+  </style>
+</head>
+<body class="bg-[#0b0c10] text-[#e2dfd2] min-h-screen flex flex-col justify-between items-center relative overflow-hidden select-none">
+
+  <!-- Background decorative light & particles -->
+  <div class="fixed inset-0 pointer-events-none z-0">
+    <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-amber-600/10 rounded-full blur-[120px] aura-glow"></div>
+    <div class="absolute bottom-[-100px] left-1/2 -translate-x-1/2 w-[480px] h-[480px] bg-orange-700/10 rounded-full blur-[100px]"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(20,22,28,0)_0%,rgba(8,9,12,0.85)_100%)]"></div>
+  </div>
+
+  <!-- Header / Nav -->
+  <header class="w-full max-w-2xl px-6 pt-6 pb-2 flex justify-between items-center z-10">
+    <div class="flex items-center gap-3">
+      <div class="w-2.5 h-2.5 rounded-full bg-amber-400 shadow-[0_0_8px_#f59e0b]"></div>
+      <h1 class="text-sm font-semibold tracking-widest uppercase text-amber-200/80">赛博功德堂 · 涤心净意</h1>
+    </div>
+    
+    <!-- Controls (Audio & Reset) -->
+    <div class="flex items-center gap-2">
+      <button id="soundToggleBtn" class="px-3.5 py-1.5 rounded-full bg-white/5 border border-amber-500/20 hover:border-amber-500/50 hover:bg-white/10 active:scale-95 transition-all text-xs text-amber-200/90 flex items-center gap-1.5 backdrop-blur-sm">
+        <svg id="soundIconOn" class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+          <path d="M14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77zm-2.5-1.23L6.5 6.5H2v11h4.5l5 4.5V2z"/>
+        </svg>
+        <svg id="soundIconOff" class="w-3.5 h-3.5 fill-current hidden" viewBox="0 0 24 24">
+          <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27l4.73 4.73H2v6h4.5l5 5V14.5l4.9 4.9.01-.01 1.32-1.32L4.27 3zM11.5 4v3.73l-5-5L11.5 4z"/>
+        </svg>
+        <span id="soundStatusText">声音 开</span>
+      </button>
+
+      <button id="resetBtn" title="功德清零" class="p-2 rounded-full bg-white/5 border border-white/10 hover:border-amber-500/30 hover:bg-white/10 text-white/60 hover:text-amber-300 transition-all active:scale-90">
+        <svg class="w-3.5 h-3.5 fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Merit Score Display -->
+  <div class="text-center z-10 my-2">
+    <div class="text-xs uppercase tracking-[0.35em] text-amber-400/70 font-medium mb-1">当前所积功德</div>
+    <div id="meritCount" class="font-num text-5xl sm:text-6xl font-bold tracking-tight bg-gradient-to-b from-amber-200 via-amber-400 to-amber-600 bg-clip-text text-transparent drop-shadow-[0_4px_16px_rgba(245,158,11,0.25)]">
+      0
+    </div>
+    <div class="text-[11px] text-stone-400/70 mt-1.5 flex items-center justify-center gap-2">
+      <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400/80 animate-ping"></span>
+      <span id="sessionStatus">功德圆满 · 心平气和</span>
+    </div>
+  </div>
+
+  <!-- Center Interactive Stage -->
+  <div class="relative w-full flex-1 max-h-[460px] flex items-center justify-center z-10 px-4">
+    <!-- Click area container with touch and click handling -->
+    <div id="woodFishHitbox" class="relative group cursor-pointer touch-none p-8 flex items-center justify-center">
+      
+      <!-- Ripple Effect Container -->
+      <div id="rippleContainer" class="absolute inset-0 flex items-center justify-center pointer-events-none"></div>
+
+      <!-- Wooden Fish SVG -->
+      <div id="woodFishVisual" class="w-64 h-64 sm:w-72 sm:h-72 transition-transform duration-75 ease-out select-none pointer-events-none drop-shadow-[0_20px_35px_rgba(0,0,0,0.8)]">
+        <svg viewBox="0 0 320 280" class="w-full h-full fill-none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <!-- Body Gradient (Rich Lacquered Rosewood / Sandalwood) -->
+            <radialGradient id="fishBodyGrad" cx="38%" cy="35%" r="65%">
+              <stop offset="0%" stop-color="#4a3022" />
+              <stop offset="45%" stop-color="#2a1811" />
+              <stop offset="85%" stop-color="#140a07" />
+              <stop offset="100%" stop-color="#090403" />
+            </radialGradient>
+
+            <!-- Golden rim highlight -->
+            <linearGradient id="goldRim" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#fef08a" stop-opacity="0.85"/>
+              <stop offset="35%" stop-color="#d97706" stop-opacity="0.5"/>
+              <stop offset="70%" stop-color="#78350f" stop-opacity="0.3"/>
+              <stop offset="100%" stop-color="#b45309" stop-opacity="0.6"/>
+            </linearGradient>
+
+            <!-- Inner slot depth -->
+            <linearGradient id="slotShadow" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#020101" />
+              <stop offset="100%" stop-color="#1a0c07" />
+            </linearGradient>
+            
+            <filter id="zenGlow" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#f59e0b" flood-opacity="0.18" />
+            </filter>
+          </defs>
+
+          <!-- Shadow underneath -->
+          <ellipse cx="160" cy="245" rx="100" ry="22" fill="#000" opacity="0.65" filter="blur(14px)" />
+
+          <!-- Main Fish Body -->
+          <path d="M 70 170 
+                   C 40 140, 45 75, 115 50 
+                   C 185 25, 260 55, 275 110 
+                   C 290 165, 255 220, 195 235 
+                   C 135 250, 95 225, 70 170 Z" 
+                fill="url(#fishBodyGrad)" 
+                stroke="url(#goldRim)" 
+                stroke-width="3"
+                filter="url(#zenGlow)" />
+
+          <!-- Traditional Fish Tail / Handle Fin -->
+          <path d="M 68 165 
+                   C 35 155, 25 115, 45 85 
+                   C 52 75, 68 85, 72 105 
+                   C 60 120, 62 145, 68 165 Z" 
+                fill="#24130d" 
+                stroke="#d97706" 
+                stroke-width="1.8" 
+                opacity="0.9" />
+
+          <!-- Classic Wooden Fish Resonating Mouth Slot -->
+          <path d="M 115 160 
+                   C 130 185, 195 195, 245 155 
+                   C 220 170, 150 170, 125 145 
+                   C 118 138, 110 148, 115 160 Z" 
+                fill="url(#slotShadow)" 
+                stroke="#eab308" 
+                stroke-opacity="0.4" 
+                stroke-width="1.5" />
+
+          <!-- Circular eye / Sound hole notch -->
+          <circle cx="215" cy="118" r="8" fill="#050302" stroke="#d97706" stroke-width="1.5" stroke-opacity="0.6" />
+          <circle cx="217" cy="116" r="2.5" fill="#fef08a" opacity="0.7" />
+
+          <!-- Traditional carved scales & swirl details -->
+          <path d="M 130 95 C 150 80, 185 85, 195 105" stroke="#d97706" stroke-width="2" stroke-linecap="round" opacity="0.35" fill="none" />
+          <path d="M 110 115 C 135 100, 175 108, 180 130" stroke="#d97706" stroke-width="2" stroke-linecap="round" opacity="0.35" fill="none" />
+          <path d="M 90 140 C 115 130, 145 138, 155 155" stroke="#d97706" stroke-width="1.8" stroke-linecap="round" opacity="0.25" fill="none" />
+          
+          <!-- Gloss Reflection highlight -->
+          <path d="M 115 62 C 165 42, 225 60, 245 95 C 215 75, 160 62, 115 76 Z" fill="#ffffff" opacity="0.12" />
+        </svg>
+      </div>
+
+      <!-- Floating Text Container Anchor -->
+      <div id="floatAnchor" class="absolute inset-0 pointer-events-none"></div>
+    </div>
+  </div>
+
+  <!-- Bottom Panel: Auto Knocker & Controls -->
+  <footer class="w-full max-w-md px-6 pb-8 pt-2 flex flex-col items-center gap-4 z-10">
+    
+    <!-- Auto-Tap Switch & BPM Indicator -->
+    <div class="w-full bg-stone-900/70 border border-white/10 rounded-2xl p-4 backdrop-blur-md flex items-center justify-between shadow-2xl">
+      <div class="flex items-center gap-3">
+        <button id="autoToggleBtn" class="relative inline-flex h-7 w-13 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-stone-700 transition-colors duration-200 ease-in-out focus:outline-none">
+          <span id="toggleKnob" class="translate-x-0 pointer-events-none inline-block h-6 w-6 transform rounded-full bg-stone-300 shadow ring-0 transition duration-200 ease-in-out"></span>
+        </button>
+        <div>
+          <div class="text-sm font-semibold text-stone-200 flex items-center gap-2">
+            自动诵经敲击
+            <span id="bpmBadge" class="text-[10px] uppercase font-num tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/30 px-1.5 py-0.5 rounded">60 BPM</span>
+          </div>
+          <div class="text-[11px] text-stone-400">每分钟敲六十下 (1秒/次)</div>
+        </div>
+      </div>
+
+      <!-- Beat Metronome Indicator Light -->
+      <div class="flex flex-col items-end">
+        <div id="beatLight" class="w-3.5 h-3.5 rounded-full bg-stone-700 transition-all duration-150"></div>
+        <span class="text-[9px] text-stone-500 mt-1 uppercase tracking-wider font-mono">PULSE</span>
+      </div>
+    </div>
+
+    <!-- Instructions / Zen motto -->
+    <div class="text-[12px] text-stone-400 text-center tracking-wide space-y-1">
+      <p>点击或轻触木鱼即可手动加功德 · 随时开启自动修行</p>
+      <p class="text-[11px] text-amber-500/60 font-serif italic">“凡心偶起恶堕意，闻此鱼声罪自消”</p>
+    </div>
+  </footer>
+
+  <script>
+    // --- State & Variables ---
+    let merit = parseInt(localStorage.getItem('cyber_merit_score') || '0', 10);
+    let isAutoMode = true; // Auto-knocking starts on by default as requested
+    let isMuted = false;
+    let autoInterval = null;
+    let audioCtx = null;
+    const BPM = 60; // 60 knocks per minute = 1000ms per knock
+    const INTERVAL_MS = (60 / BPM) * 1000;
+
+    // --- DOM Elements ---
+    const meritCountEl = document.getElementById('meritCount');
+    const woodFishHitbox = document.getElementById('woodFishHitbox');
+    const woodFishVisual = document.getElementById('woodFishVisual');
+    const floatAnchor = document.getElementById('floatAnchor');
+    const rippleContainer = document.getElementById('rippleContainer');
+    const autoToggleBtn = document.getElementById('autoToggleBtn');
+    const toggleKnob = document.getElementById('toggleKnob');
+    const beatLight = document.getElementById('beatLight');
+    const soundToggleBtn = document.getElementById('soundToggleBtn');
+    const soundIconOn = document.getElementById('soundIconOn');
+    const soundIconOff = document.getElementById('soundIconOff');
+    const soundStatusText = document.getElementById('soundStatusText');
+    const resetBtn = document.getElementById('resetBtn');
+    const sessionStatus = document.getElementById('sessionStatus');
+
+    // Init display
+    meritCountEl.innerText = merit.toLocaleString();
+
+    // --- High-Fidelity Web Audio Synthesizer (Realistic Wood Percussion) ---
+    function initAudioContext() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function playWoodfishSound() {
+      if (isMuted) return;
+      initAudioContext();
+      if (!audioCtx) return;
+
+      const now = audioCtx.currentTime;
+
+      // 1. Initial transient "click / thud" of the mallet striker
+      const clickOsc = audioCtx.createOscillator();
+      const clickGain = audioCtx.createGain();
+      clickOsc.type = 'sine';
+      clickOsc.frequency.setValueAtTime(620, now);
+      clickOsc.frequency.exponentialRampToValueAtTime(140, now + 0.035);
+      clickGain.gain.setValueAtTime(0.7, now);
+      clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+      clickOsc.connect(clickGain);
+      clickGain.connect(audioCtx.destination);
+      clickOsc.start(now);
+      clickOsc.stop(now + 0.045);
+
+      // 2. Hollow wood acoustic body resonance (Fundamental pitch ~280Hz - 310Hz with slight natural pitch shift)
+      const baseFreq = 285 + (Math.random() * 8 - 4);
+      const bodyOsc = audioCtx.createOscillator();
+      const bodyGain = audioCtx.createGain();
+      
+      // Bandpass filter to simulate hollow chamber interior
+      const bandpass = audioCtx.createBiquadFilter();
+      bandpass.type = 'bandpass';
+      bandpass.frequency.setValueAtTime(baseFreq, now);
+      bandpass.Q.setValueAtTime(6.5, now);
+
+      bodyOsc.type = 'triangle';
+      bodyOsc.frequency.setValueAtTime(baseFreq, now);
+      bodyOsc.frequency.exponentialRampToValueAtTime(baseFreq * 0.94, now + 0.16);
+
+      bodyGain.gain.setValueAtTime(0.95, now);
+      bodyGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.24);
+
+      bodyOsc.connect(bandpass);
+      bandpass.connect(bodyGain);
+      bodyGain.connect(audioCtx.destination);
+
+      bodyOsc.start(now);
+      bodyOsc.stop(now + 0.25);
+
+      // 3. Subtle sub-body acoustic warmth thump
+      const subOsc = audioCtx.createOscillator();
+      const subGain = audioCtx.createGain();
+      subOsc.type = 'sine';
+      subOsc.frequency.setValueAtTime(142, now);
+      subGain.gain.setValueAtTime(0.35, now);
+      subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+      subOsc.connect(subGain);
+      subGain.connect(audioCtx.destination);
+      subOsc.start(now);
+      subOsc.stop(now + 0.1);
+    }
+
+    // --- Strike Trigger Logic ---
+    const phrases = ['功德 +1', '心绪渐宁 +1', '杂念消除 +1', '善意丰沛 +1', '功德 +1', '烦恼消解 +1'];
+
+    function strike(customText = null, clientX = null, clientY = null) {
+      // 1. Play realistic wooden fish sound
+      playWoodfishSound();
+
+      // 2. Increment merit count
+      merit += 1;
+      meritCountEl.innerText = merit.toLocaleString();
+      localStorage.setItem('cyber_merit_score', merit.toString());
+
+      // 3. Squash and bounce animation
+      woodFishVisual.classList.remove('fish-strike');
+      void woodFishVisual.offsetWidth; // Force CSS reflow
+      woodFishVisual.classList.add('fish-strike');
+      setTimeout(() => {
+        woodFishVisual.classList.remove('fish-strike');
+      }, 100);
+
+      // 4. Spawn golden ripple
+      createRipple();
+
+      // 5. Spawn floating "+1 功德" text
+      const chosenText = customText || (Math.random() < 0.2 ? phrases[Math.floor(Math.random() * phrases.length)] : '功德 +1');
+      spawnFloatingMerit(chosenText, clientX, clientY);
+
+      // 6. Flash pulse indicator
+      beatLight.classList.add('bg-amber-400', 'shadow-[0_0_12px_#f59e0b]');
+      beatLight.classList.remove('bg-stone-700');
+      setTimeout(() => {
+        beatLight.classList.remove('bg-amber-400', 'shadow-[0_0_12px_#f59e0b]');
+        beatLight.classList.add('bg-stone-700');
+      }, 180);
+    }
+
+    function createRipple() {
+      const ripple = document.createElement('div');
+      ripple.className = 'ripple-effect border border-amber-400/50 bg-amber-400/10 w-44 h-44';
+      rippleContainer.appendChild(ripple);
+      setTimeout(() => {
+        ripple.remove();
+      }, 700);
+    }
+
+    function spawnFloatingMerit(text, targetX = null, targetY = null) {
+      const el = document.createElement('div');
+      el.className = 'floating-merit font-bold text-amber-300 drop-shadow-[0_2px_8px_rgba(245,158,11,0.6)] text-base sm:text-lg tracking-wider select-none';
+      el.innerText = text;
+
+      // Random slight tilt and drift
+      const rot = (Math.random() * 16 - 8) + 'deg';
+      el.style.setProperty('--rot', rot);
+
+      if (targetX !== null && targetY !== null) {
+        const rect = floatAnchor.getBoundingClientRect();
+        const posX = targetX - rect.left;
+        const posY = targetY - rect.top;
+        el.style.left = `${posX}px`;
+        el.style.top = `${posY}px`;
+      } else {
+        // Center offset variation
+        const randomX = 50 + (Math.random() * 20 - 10);
+        const randomY = 40 + (Math.random() * 10 - 5);
+        el.style.left = `${randomX}%`;
+        el.style.top = `${randomY}%`;
+      }
+
+      floatAnchor.appendChild(el);
+      setTimeout(() => {
+        el.remove();
+      }, 1150);
+    }
+
+    // --- Auto Mode Control (60 Knocks per minute) ---
+    function updateToggleUI() {
+      if (isAutoMode) {
+        autoToggleBtn.classList.remove('bg-stone-700');
+        autoToggleBtn.classList.add('bg-amber-600');
+        toggleKnob.classList.remove('translate-x-0', 'bg-stone-300');
+        toggleKnob.classList.add('translate-x-6', 'bg-white');
+        sessionStatus.innerText = '持续修行中 · 每秒一响 (60 BPM)';
+      } else {
+        autoToggleBtn.classList.remove('bg-amber-600');
+        autoToggleBtn.classList.add('bg-stone-700');
+        toggleKnob.classList.remove('translate-x-6', 'bg-white');
+        toggleKnob.classList.add('translate-x-0', 'bg-stone-300');
+        sessionStatus.innerText = '自动已暂停 · 可随时点击';
+      }
+    }
+
+    function startAutoKnock() {
+      if (autoInterval) clearInterval(autoInterval);
+      autoInterval = setInterval(() => {
+        strike();
+      }, INTERVAL_MS);
+      isAutoMode = true;
+      updateToggleUI();
+    }
+
+    function stopAutoKnock() {
+      if (autoInterval) {
+        clearInterval(autoInterval);
+        autoInterval = null;
+      }
+      isAutoMode = false;
+      updateToggleUI();
+    }
+
+    autoToggleBtn.addEventListener('click', () => {
+      initAudioContext();
+      if (isAutoMode) {
+        stopAutoKnock();
+      } else {
+        strike(); // Immediate response knock
+        startAutoKnock();
+      }
+    });
+
+    // --- Manual Tapping (Click & Touch) ---
+    woodFishHitbox.addEventListener('pointerdown', (e) => {
+      initAudioContext();
+      strike(null, e.clientX, e.clientY);
+    });
+
+    // --- Sound Mute Toggle ---
+    soundToggleBtn.addEventListener('click', () => {
+      initAudioContext();
+      isMuted = !isMuted;
+      if (isMuted) {
+        soundIconOn.classList.add('hidden');
+        soundIconOff.classList.remove('hidden');
+        soundStatusText.innerText = '声音 关';
+      } else {
+        soundIconOff.classList.add('hidden');
+        soundIconOn.classList.remove('hidden');
+        soundStatusText.innerText = '声音 开';
+      }
+    });
+
+    // --- Reset Counter ---
+    resetBtn.addEventListener('click', () => {
+      merit = 0;
+      meritCountEl.innerText = '0';
+      localStorage.setItem('cyber_merit_score', '0');
+      spawnFloatingMerit('心归太虚 (清零)', null, null);
+    });
+
+    // --- Window Focus / Audio Unlock on First Gesture ---
+    window.addEventListener('click', () => initAudioContext(), { once: true });
+    window.addEventListener('touchstart', () => initAudioContext(), { once: true });
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        initAudioContext();
+        strike();
+      }
+    });
+
+    // --- Initial Auto-start on load ---
+    window.onload = function() {
+      startAutoKnock();
+    };
+  </script>
+</body>
+</html>

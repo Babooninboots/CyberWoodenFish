@@ -1,16 +1,17 @@
-# 🐟 CyberWoodenFish · 赛博木鱼
+# 🐟 CyberWoodenFish · 赛博木鱼 (DeepSeek娘助念版)
 
 <p align="center">
   <img src="https://img.shields.io/badge/Status-Peaceful-amber.svg?style=flat-square" alt="Status" />
+  <img src="https://img.shields.io/badge/Character-DeepSeek%E5%A8%98-38bdf8.svg?style=flat-square" alt="DeepSeek" />
+  <img src="https://img.shields.io/badge/Animation-Live2D%20CSS%20Rig-sky.svg?style=flat-square" alt="Live2D" />
   <img src="https://img.shields.io/badge/Audio-Web%20Audio%20API-emerald.svg?style=flat-square" alt="Web Audio" />
-  <img src="https://img.shields.io/badge/Style-TailwindCSS-38bdf8.svg?style=flat-square" alt="Tailwind" />
   <img src="https://img.shields.io/badge/Dependencies-Zero-green.svg?style=flat-square" alt="Zero Dependencies" />
   <img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square" alt="License" />
 </p>
 
 <p align="center">
   <b>For those who do not feel well while surfing the internet!</b><br>
-  <i>专治上网冲浪时的烦躁、内耗与心浮气躁。涤心净意，功德+1。</i>
+  <i>专治上网冲浪时的烦躁、内耗与心浮气躁。深海鲸音涤尘障，指端轻叩证菩提。功德+1。</i>
 </p>
 
 ---
@@ -19,7 +20,7 @@
 
 在快节奏的互联网冲浪时代，信息过载与争论纷扰往往让人心生浮躁。**CyberWoodenFish (赛博木鱼)** 是一款轻量、优雅且现代的网页版电子木鱼。
 
-无需安装任何应用、无需配置复杂环境，甚至不需要网络请求音频文件——只需在浏览器中打开，即可随心敲击，或开启自动修行，聆听空灵纯净的木鱼回音，积攒赛博功德，找回内心的安宁。
+无需安装任何应用、无需配置复杂环境，甚至不需要网络请求音频文件——只需在浏览器中打开，即可随心敲击，或由 **DeepSeek 娘** 伴随 60 BPM 节拍为您自动诵经敲击，聆听空灵纯净的木鱼回音，积攒赛博功德，找回内心的安宁。
 
 > **“凡心偶起恶堕意，闻此鱼声罪自消。”**
 
@@ -27,21 +28,22 @@
 
 ## ✨ 核心特性 / Features
 
+- 🎭 **DeepSeek娘 Live2D 动态立绘装配 (Live2D CSS Rigging)**
+  - 身躯盘坐底板（`body_sitting`）呈现细腻的 3.4 秒正弦波自然呼吸起伏（`live2d-breathe`）；
+  - 每 3 秒自动触发喜悦笑眼眨动（`eye_state2`）；
+  - 手臂绑定肩关节解剖学回转轴心，挥槌时包含蓄力后仰（-22°）、极速俯冲（+14°）与阻尼回弹（-3°）；
+  - 敲击瞬间触发张口反应（`mouth_state2`）、身躯微俯颔首（`body-nod`）与木鱼受击弹性挤压形变（Squash & Stretch）。
+
 - 🔊 **纯原生 Web Audio 物理合成音效 (Zero External Audio Files)**
   - 彻底摆脱外部 `.mp3` / `.wav` 音频文件的网络延迟与加载失败烦恼；
   - 基于浏览器的 **Web Audio API**，通过多层振荡器 (Oscillator) 与带通滤波器 (BiquadFilter) 物理级模拟真实木槌打击的瞬态、红木中空腔体的空灵共振与温润的低频回响。
 
 - 🎨 **禅意中式暗色美学 UI**
   - 精心绘制的矢量红木/紫檀木纹与金边木鱼造型；
-  - 伴随点击的真实弹性形变（Squash & Bounce）动效、扩散的金色波纹与背景呼吸微光。
+  - 伴随点击的真实弹性形变动效、爆破星芒（Spark Burst）、扩散的蓝色/金色波纹与背景呼吸微光。
 
 - 💫 **灵动弹字与随机祝福**
-  - 每次敲击随机生成轻微倾斜漂浮上升的祝福文本：
-    - `功德 +1`
-    - `心绪渐宁 +1`
-    - `杂念消除 +1`
-    - `善意丰沛 +1`
-    - `烦恼消解 +1`
+  - 每次敲击随机生成轻微倾斜漂浮上升的祝福文本（`功德 +1`、`心绪渐宁 +1`、`Bug消除 +1`、`算力充盈 +1`、`理智回升 +1` 等）。
 
 - ⏱️ **自动诵经敲击模式 (Auto Knocker)**
   - 默认开启 60 BPM（每分钟 60 下 / 1 秒 1 次）稳定节拍敲击；
@@ -49,7 +51,7 @@
   - 可随时一键切换为手动专注模式。
 
 - ⌨️ **全平台便捷交互**
-  - **鼠标点击 / 屏幕触控**：点击木鱼主体即可触发敲击；
+  - **鼠标点击 / 屏幕触控**：点击 DeepSeek 娘或木鱼主体即可触发敲击；
   - **空格快捷键 (Spacebar)**：键盘轻按 `Space` 即可击打木鱼；
   - **静音沉浸模式**：支持一键开关声音，办公室或公共场合静音积德；
   - **功德重置**：提供一键清零（心归太虚）按钮。
@@ -59,7 +61,7 @@
   - 关闭浏览器或刷新页面，修行进度绝不丢失。
 
 - 🚀 **极简单文件，开箱即用**
-  - 纯静态页面架构，零构建、零依赖、无后端服务要求，双击即用。
+  - 纯静态页面架构，零构建、零依赖、无后端服务要求，双击 `index.html` 即用。
 
 ---
 
@@ -88,6 +90,7 @@ https://<your-username>.github.io/CyberWoodenFish/
 ## 🛠️ 技术栈 / Tech Stack
 
 - **HTML5** & **SVG**: 矢量木鱼与交互结构
+- **CSS3 Animations**: Live2D 分层装配骨骼与动力学补间
 - **Tailwind CSS**: 现代暗黑响应式界面排版
 - **Web Audio API**: 实时声学合成器
 - **Vanilla JavaScript**: 纯原生 DOM 事件与本地存储交互
@@ -98,7 +101,7 @@ https://<your-username>.github.io/CyberWoodenFish/
 
 | 动作 | 操作方式 | 说明 |
 | :--- | :--- | :--- |
-| **敲击木鱼** | 鼠标左键点击木鱼 / 触屏轻击 / 键盘按 `Space` 空格键 | 触发木鱼音效并增加功德点数 |
+| **敲击木鱼** | 鼠标左键点击 DeepSeek 娘或木鱼 / 触屏轻击 / 键盘按 `Space` 空格键 | 触发 DeepSeek 娘挥槌打击动效并增加功德点数 |
 | **自动敲击** | 点击底部的「自动诵经敲击」开关 | 开启/关闭 60 BPM 节拍自动敲击 |
 | **静音切换** | 点击右上角「声音 开/关」按钮 | 在有声模式与静音模式间切换 |
 | **功德重置** | 点击右上角重置按钮（刷新图标） | 将功德计数值清空重置为 0 |
